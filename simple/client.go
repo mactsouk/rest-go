@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -19,7 +20,7 @@ func loginEndpoint(server string, user User) (int, string) {
 	userMarshall, _ := json.Marshal(user)
 	u := bytes.NewReader(userMarshall)
 
-	req, err := http.NewRequest("POST", server+endPoint, u)
+	req, err := http.NewRequest("GET", server+endPoint, u)
 	if err != nil {
 		fmt.Println("Error is req: ", err)
 		return 400, ""
@@ -41,7 +42,7 @@ func loginEndpoint(server string, user User) (int, string) {
 	return resp.StatusCode, string(data)
 }
 
-const endPoint = "/api/login"
+const endPoint = "/get"
 
 func main() {
 	if len(os.Args) != 4 {
@@ -55,11 +56,20 @@ func main() {
 	password := os.Args[3]
 	loginInfo := User{username, password}
 
-	HTTPcode, token := loginEndpoint(server, loginInfo)
+	HTTPcode, data := loginEndpoint(server, loginInfo)
 
 	if HTTPcode != 200 {
 		fmt.Println("Return code:", HTTPcode)
 		return
 	}
-	fmt.Println("Authentication token:", token)
+
+	var user User
+	err := json.Unmarshal([]byte(data), &user)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Println(user.Username)
+	log.Println(user.Password)
 }
