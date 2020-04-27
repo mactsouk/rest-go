@@ -67,6 +67,13 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	s := &http.Server{
+		Addr:         PORT,
+		Handler:      mux,
+		IdleTimeout:  10 * time.Second,
+		ReadTimeout:  time.Second,
+		WriteTimeout: time.Second,
+	}
 
 	mux.Handle("/time", http.HandlerFunc(timeHandler))
 	mux.Handle("/add", http.HandlerFunc(addHandler))
@@ -74,7 +81,7 @@ func main() {
 	mux.Handle("/", http.HandlerFunc(defaultHandler))
 
 	fmt.Println("Ready to serve at", PORT)
-	err := http.ListenAndServe(PORT, mux)
+	err := s.ListenAndServe()
 	if err != nil {
 		fmt.Println(err)
 		return
