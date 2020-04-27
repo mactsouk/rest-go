@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -60,14 +61,20 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	arguments := os.Args
+	if len(arguments) != 1 {
+		PORT = ":" + arguments[1]
+	}
 
-	http.HandleFunc("/time", timeHandler)
-	http.HandleFunc("/add", addHandler)
-	http.HandleFunc("/get", getHandler)
-	http.HandleFunc("/", defaultHandler)
+	mux := http.NewServeMux()
+
+	mux.Handle("/time", http.HandlerFunc(timeHandler))
+	mux.Handle("/add", http.HandlerFunc(addHandler))
+	mux.Handle("/get", http.HandlerFunc(getHandler))
+	mux.Handle("/", http.HandlerFunc(defaultHandler))
 
 	fmt.Println("Ready to serve at", PORT)
-	err := http.ListenAndServe(PORT, nil)
+	err := http.ListenAndServe(PORT, mux)
 	if err != nil {
 		fmt.Println(err)
 		return
