@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-var PORT = ":1234"
-
 type User struct {
 	Username string `json:"user"`
 	Password string `json:"password"`
 }
 
 var user User
+var PORT = ":1234"
+var DATA = make(map[string]string)
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Serving:", r.URL.Path, "from", r.Host)
@@ -44,6 +44,8 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	DATA[user.Username] = user.Password
+
 	log.Println(user.Username)
 	log.Println(user.Password)
 }
@@ -56,8 +58,14 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "%s\n", d)
-
+	_, ok := iMap[user.Username]
+	if ok != nil {
+		http.Error(w, "Error:", http.StatusFound)
+		fmt.Fprintf(w, "%s\n", d)
+	} else {
+		http.Error(w, "Error:", http.StatusNotFound)
+	}
+	return
 }
 
 func main() {
