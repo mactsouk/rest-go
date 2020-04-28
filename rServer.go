@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"user"`
+	Password string `json:"password"`
+}
+
 func main() {
 
 	s := &http.Server{
