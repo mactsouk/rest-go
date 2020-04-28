@@ -92,18 +92,18 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(user)
 
-	if user.Password == DATA[user.Username] {
-		delete(DATA, user.Username)
-		w.WriteHeader(http.StatusFound)
-	}
-
 	_, ok := DATA[user.Username]
 	if ok && user.Username != "" {
-		w.WriteHeader(http.StatusFound)
-		fmt.Fprintf(w, "%s\n", d)
-		log.Println(DATA)
+		// If the password is correct delete user
+		if user.Password == DATA[user.Username] {
+			delete(DATA, user.Username)
+			w.WriteHeader(http.StatusFound)
+			w.WriteHeader(http.StatusFound)
+			fmt.Fprintf(w, "%s\n", d)
+			log.Println(DATA)
+		}
 	} else {
-		log.Println("Not found!")
+		log.Println("User", user.Username, "Not found!")
 		w.WriteHeader(http.StatusNotFound)
 		http.Error(w, "Delete - Resource not found!", http.StatusNotFound)
 	}
@@ -129,7 +129,7 @@ func main() {
 	mux.Handle("/time", http.HandlerFunc(timeHandler))
 	mux.Handle("/add", http.HandlerFunc(addHandler))
 	mux.Handle("/get", http.HandlerFunc(getHandler))
-	mux.Handle("/delete", http.HandlerFunc(getHandler))
+	mux.Handle("/delete", http.HandlerFunc(deleteHandler))
 	mux.Handle("/", http.HandlerFunc(defaultHandler))
 
 	fmt.Println("Ready to serve at", PORT)
