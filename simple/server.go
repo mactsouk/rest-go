@@ -44,26 +44,35 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	DATA[user.Username] = user.Password
-
-	log.Println(user.Username)
-	log.Println(user.Password)
+	if user.Username != "" {
+		DATA[user.Username] = user.Password
+		log.Println(DATA)
+	}
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request) {
-	d, err := json.Marshal(&user)
+	d, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "Error:", http.StatusBadRequest)
+		http.Error(w, "ReadAll - Error", http.StatusBadRequest)
 		return
 	}
 
-	_, ok := iMap[user.Username]
-	if ok != nil {
-		http.Error(w, "Error:", http.StatusFound)
+	err = json.Unmarshal(d, &user)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unmarshal - Error", http.StatusBadRequest)
+		return
+	}
+	fmt.Println(user)
+
+	_, ok := DATA[user.Username]
+	if ok && user.Username != "" {
+		w.WriteHeader(http.StatusFound)
 		fmt.Fprintf(w, "%s\n", d)
 	} else {
-		http.Error(w, "Error:", http.StatusNotFound)
+		fmt.Println("Not found!")
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "Map - Resource not found!", http.StatusNotFound)
 	}
 	return
 }

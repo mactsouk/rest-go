@@ -16,6 +16,10 @@ type User struct {
 	Password string `json:"password"`
 }
 
+var u1 = &User{"admin", "admin"}
+var u2 = &User{"tsoukalos", "pass"}
+var u3 = &User{"", "pass"}
+
 func loginEndpoint(server string, user User) (int, string) {
 	userMarshall, _ := json.Marshal(user)
 	u := bytes.NewReader(userMarshall)
