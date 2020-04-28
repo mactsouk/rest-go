@@ -70,10 +70,44 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusFound)
 		fmt.Fprintf(w, "%s\n", d)
 	} else {
-		fmt.Println("Not found!")
+		log.Println("Not found!")
 		w.WriteHeader(http.StatusNotFound)
 		http.Error(w, "Map - Resource not found!", http.StatusNotFound)
 	}
+	return
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	d, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "ReadAll - Error", http.StatusBadRequest)
+		return
+	}
+
+	err = json.Unmarshal(d, &user)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Unmarshal - Error", http.StatusBadRequest)
+		return
+	}
+	log.Println(user)
+
+	if user.Password == DATA[user.Username] {
+		delete(DATA, user.Username)
+		w.WriteHeader(http.StatusFound)
+	}
+
+	_, ok := DATA[user.Username]
+	if ok && user.Username != "" {
+		w.WriteHeader(http.StatusFound)
+		fmt.Fprintf(w, "%s\n", d)
+		log.Println(DATA)
+	} else {
+		log.Println("Not found!")
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "Delete - Resource not found!", http.StatusNotFound)
+	}
+	log.Println("After:", DATA)
 	return
 }
 
@@ -95,6 +129,7 @@ func main() {
 	mux.Handle("/time", http.HandlerFunc(timeHandler))
 	mux.Handle("/add", http.HandlerFunc(addHandler))
 	mux.Handle("/get", http.HandlerFunc(getHandler))
+	mux.Handle("/delete", http.HandlerFunc(getHandler))
 	mux.Handle("/", http.HandlerFunc(defaultHandler))
 
 	fmt.Println("Ready to serve at", PORT)
