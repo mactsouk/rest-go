@@ -20,8 +20,10 @@ var PORT = ":1234"
 var DATA = make(map[string]string)
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Serving:", r.URL.Path, "from", r.Host)
-	log.Printf("Data: %s\n", "Bye!")
+	log.Println("Serving:", r.URL.Path, "from", r.Host)
+	w.WriteHeader(http.StatusNotFound)
+	Body := "Thanks for visiting!\n"
+	fmt.Fprintf(w, "%s", Body)
 }
 
 func timeHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +99,6 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		// If the password is correct delete user
 		if user.Password == DATA[user.Username] {
 			delete(DATA, user.Username)
-			w.WriteHeader(http.StatusFound)
 			w.WriteHeader(http.StatusFound)
 			fmt.Fprintf(w, "%s\n", d)
 			log.Println(DATA)
