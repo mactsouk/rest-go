@@ -132,8 +132,8 @@ func timeEndpoint(server string) (int, string) {
 	return resp.StatusCode, string(data)
 }
 
-func slashEndpoint(server string) (int, string) {
-	req, err := http.NewRequest("POST", server, nil)
+func slashEndpoint(server, URL string) (int, string) {
+	req, err := http.NewRequest("POST", server+URL, nil)
 	if err != nil {
 		fmt.Println("Error in req: ", err)
 		return http.StatusInternalServerError, ""
@@ -215,6 +215,12 @@ func main() {
 	fmt.Print("/time returned: ", HTTPcode, " ", myTime)
 
 	fmt.Println("/")
-	HTTPcode, response := slashEndpoint(server)
+	URL := "/"
+	HTTPcode, response := slashEndpoint(server, URL)
 	fmt.Print("/ returned: ", HTTPcode, " with response: ", response)
+
+	fmt.Println("/what")
+	URL = "/what"
+	HTTPcode, response = slashEndpoint(server, URL)
+	fmt.Print(URL, " returned: ", HTTPcode, " with response: ", response)
 }
