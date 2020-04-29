@@ -35,21 +35,20 @@ func getEndpoint(server string, user User) int {
 	}
 
 	resp, err := c.Do(req)
+	defer resp.Body.Close()
+
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-
 	if resp == nil {
 		return http.StatusNotFound
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
+	fmt.Print("/get returned: ", string(data))
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println("/get Response:", string(data))
-
-	fmt.Println("/get Status:", resp.StatusCode)
 	return resp.StatusCode
 }
 
