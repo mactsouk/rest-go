@@ -104,6 +104,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		// If the password is correct delete user
 		if user.Password == DATA[user.Username] {
 			delete(DATA, user.Username)
+			// 302 response missing Location header
 			w.WriteHeader(http.StatusOK)
 			fmt.Fprintf(w, "%s\n", d)
 			log.Println(DATA)
