@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -16,18 +14,18 @@ type User struct {
 	Password string `json:"password"`
 }
 
-var u1 = &User{"admin", "admin"}
-var u2 = &User{"tsoukalos", "pass"}
-var u3 = &User{"", "pass"}
+var u1 = User{"admin", "admin"}
+var u2 = User{"tsoukalos", "pass"}
+var u3 = User{"", "pass"}
 
-func loginEndpoint(server string, user User) (int, string) {
+func addEndpoint(server string, user User) int {
 	userMarshall, _ := json.Marshal(user)
 	u := bytes.NewReader(userMarshall)
 
-	req, err := http.NewRequest("GET", server+endPoint, u)
+	req, err := http.NewRequest("POST", server+addEndPoint, u)
 	if err != nil {
 		fmt.Println("Error is req: ", err)
-		return 400, ""
+		return http.StatusInternalServerError
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -39,41 +37,38 @@ func loginEndpoint(server string, user User) (int, string) {
 	defer resp.Body.Close()
 
 	if resp == nil || (resp.StatusCode == http.StatusNotFound) {
-		return resp.StatusCode, ""
+		return resp.StatusCode
 	}
 
-	data, _ := ioutil.ReadAll(resp.Body)
-	return resp.StatusCode, string(data)
+	return resp.StatusCode
 }
 
-const endPoint = "/get"
+const addEndPoint = "/add"
 
 func main() {
-	if len(os.Args) != 4 {
+	if len(os.Args) != 2 {
 		fmt.Println("Wrong number of arguments!")
-		fmt.Println("Need: Server username password")
+		fmt.Println("Need: Server")
 		return
 	}
 
 	server := os.Args[1]
-	username := os.Args[2]
-	password := os.Args[3]
-	loginInfo := User{username, password}
+	HTTPcode := addEndpoint(server, u1)
 
-	HTTPcode, data := loginEndpoint(server, loginInfo)
-
-	if HTTPcode != 200 {
+	if HTTPcode != http.StatusOK {
 		fmt.Println("Return code:", HTTPcode)
 		return
+	} else {
+		fmt.Println("Data added:", u1)
 	}
 
-	var user User
-	err := json.Unmarshal([]byte(data), &user)
-	if err != nil {
-		log.Println(err)
+	HTTPcode = addEndpoint(server, u3)
+
+	if HTTPcode != http.StatusOK {
+		fmt.Println("Return code:", HTTPcode)
 		return
+	} else {
+		fmt.Println("Data added:", u3)
 	}
 
-	log.Println(user.Username)
-	log.Println(user.Password)
 }
