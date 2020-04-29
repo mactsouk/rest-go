@@ -49,6 +49,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 	if user.Username != "" {
 		DATA[user.Username] = user.Password
 		log.Println(DATA)
+		w.WriteHeader(http.StatusOK)
 	} else {
 		http.Error(w, "Error:", http.StatusBadRequest)
 		return
@@ -72,7 +73,8 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, ok := DATA[user.Username]
 	if ok && user.Username != "" {
-		w.WriteHeader(http.StatusFound)
+		log.Println("Found!")
+		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "%s\n", d)
 	} else {
 		log.Println("Not found!")
