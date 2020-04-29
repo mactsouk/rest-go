@@ -27,12 +27,14 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func timeHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	t := time.Now().Format(time.RFC1123)
 	Body := "The current time is:" + t + "\n"
 	fmt.Fprintf(w, "%s", Body)
 }
 
 func addHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	d, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Error:", http.StatusBadRequest)
@@ -57,6 +59,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	d, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "ReadAll - Error", http.StatusBadRequest)
@@ -85,6 +88,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	d, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "ReadAll - Error", http.StatusBadRequest)
