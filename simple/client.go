@@ -19,6 +19,39 @@ var u1 = User{"admin", "admin"}
 var u2 = User{"tsoukalos", "pass"}
 var u3 = User{"", "pass"}
 
+func deleteEndpoint(server string, user User) int {
+	userMarshall, _ := json.Marshal(user)
+	u := bytes.NewReader(userMarshall)
+
+	req, err := http.NewRequest("DELETE", server+deleteEndPoint, u)
+	if err != nil {
+		fmt.Println("Error in req: ", err)
+		return http.StatusInternalServerError
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	c := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+
+	resp, err := c.Do(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	if resp == nil {
+		return http.StatusNotFound
+	}
+
+	data, err := ioutil.ReadAll(resp.Body)
+	fmt.Print("/delete returned: ", string(data))
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	return resp.StatusCode
+}
+
 func getEndpoint(server string, user User) int {
 	userMarshall, _ := json.Marshal(user)
 	u := bytes.NewReader(userMarshall)
@@ -79,6 +112,8 @@ func addEndpoint(server string, user User) int {
 
 const addEndPoint = "/add"
 const getEndPoint = "/get"
+const deleteEndPoint = "/delete"
+const timeEndPoint = "/time"
 
 func main() {
 	if len(os.Args) != 2 {
@@ -113,10 +148,18 @@ func main() {
 	fmt.Println("/get")
 	HTTPcode = getEndpoint(server, u1)
 	fmt.Println("/get u1 return code:", HTTPcode)
-
 	HTTPcode = getEndpoint(server, u2)
 	fmt.Println("/get u2 return code:", HTTPcode)
-
 	HTTPcode = getEndpoint(server, u3)
 	fmt.Println("/get u3 return code:", HTTPcode)
+
+	fmt.Println("/delete")
+	HTTPcode = deleteEndpoint(server, u1)
+	fmt.Println("/delete u1 return code:", HTTPcode)
+	HTTPcode = deleteEndpoint(server, u1)
+	fmt.Println("/delete u1 return code:", HTTPcode)
+	HTTPcode = deleteEndpoint(server, u2)
+	fmt.Println("/delete u2 return code:", HTTPcode)
+	HTTPcode = deleteEndpoint(server, u3)
+	fmt.Println("/delete u3 return code:", HTTPcode)
 }
