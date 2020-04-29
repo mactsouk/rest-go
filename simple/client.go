@@ -70,5 +70,4 @@ func main() {
 	} else {
 		fmt.Println("Data added:", u3)
 	}
-
 }

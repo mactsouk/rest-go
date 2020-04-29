@@ -49,6 +49,9 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 	if user.Username != "" {
 		DATA[user.Username] = user.Password
 		log.Println(DATA)
+	} else {
+		http.Error(w, "Error:", http.StatusBadRequest)
+		return
 	}
 }
 
