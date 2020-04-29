@@ -132,6 +132,28 @@ func timeEndpoint(server string) (int, string) {
 	return resp.StatusCode, string(data)
 }
 
+func slashEndpoint(server string) (int, string) {
+	req, err := http.NewRequest("POST", server, nil)
+	if err != nil {
+		fmt.Println("Error in req: ", err)
+		return http.StatusInternalServerError, ""
+	}
+
+	c := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+
+	resp, err := c.Do(req)
+	defer resp.Body.Close()
+
+	if resp == nil || (resp.StatusCode == http.StatusNotFound) {
+		return resp.StatusCode, ""
+	}
+
+	data, _ := ioutil.ReadAll(resp.Body)
+	return resp.StatusCode, string(data)
+}
+
 const addEndPoint = "/add"
 const getEndPoint = "/get"
 const deleteEndPoint = "/delete"
@@ -191,4 +213,8 @@ func main() {
 	time.Sleep(time.Second)
 	HTTPcode, myTime = timeEndpoint(server)
 	fmt.Print("/time returned: ", HTTPcode, " ", myTime)
+
+	fmt.Println("/")
+	HTTPcode := slashEndpoint(server)
+	fmt.Println("/ returned: ", HTTPcode)
 }
