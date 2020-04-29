@@ -15,8 +15,13 @@ type User struct {
 	Password string `json:"password"`
 }
 
+// user is just a global variable
 var user User
+
+// PORT is where the web server listens to
 var PORT = ":1234"
+
+// DATA is the map that holds User records
 var DATA = make(map[string]string)
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
