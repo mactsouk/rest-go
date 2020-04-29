@@ -146,7 +146,7 @@ func slashEndpoint(server string) (int, string) {
 	resp, err := c.Do(req)
 	defer resp.Body.Close()
 
-	if resp == nil || (resp.StatusCode == http.StatusNotFound) {
+	if resp == nil {
 		return resp.StatusCode, ""
 	}
 
@@ -215,6 +215,6 @@ func main() {
 	fmt.Print("/time returned: ", HTTPcode, " ", myTime)
 
 	fmt.Println("/")
-	HTTPcode := slashEndpoint(server)
-	fmt.Println("/ returned: ", HTTPcode)
+	HTTPcode, response := slashEndpoint(server)
+	fmt.Print("/ returned: ", HTTPcode, " with response: ", response)
 }
