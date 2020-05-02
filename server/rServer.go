@@ -11,6 +11,8 @@ type User struct {
 	Username  string `json:"user"`
 	Password  string `json:"password"`
 	LastLogin time   `json:"lastlogin"`
+	Admin     bool   `json:"admin"`
+	Active    bool   `json:"active"`
 }
 
 func main() {
