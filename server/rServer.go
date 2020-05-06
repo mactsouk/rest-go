@@ -4,18 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
+
+	"github.com/mactsouk/handlers"
 )
 
-type User struct {
-	ID        int    `json:"id"`
-	Username  string `json:"user"`
-	Password  string `json:"password"`
-	LastLogin time   `json:"lastlogin"`
-	Admin     bool   `json:"admin"`
-	Active    bool   `json:"active"`
-}
+var PORT = ":1234"
 
 func main() {
+
+	mux := mux.NewRouter()
 
 	s := &http.Server{
 		Addr:         PORT,
@@ -24,6 +23,11 @@ func main() {
 		ReadTimeout:  time.Second,
 		WriteTimeout: time.Second,
 	}
+
+	fmt.Println(s)
+
+	record := handlers.User{}
+	fmt.Println(record)
 
 	fmt.Println("Hello!")
 }
