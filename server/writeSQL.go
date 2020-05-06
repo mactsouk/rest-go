@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strconv"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -22,10 +25,22 @@ func main() {
 	}
 
 	fmt.Println("Emptying database table.")
-	_, err = db.Exec("DELETE FROM data")
+	_, _ = db.Exec("DROP TABLE data")
+
+	fmt.Println("Creating table from scratch.")
+	_, err = db.Exec("CREATE TABLE data (Username STRING, Password STRING, Admin Bool);")
 	if err != nil {
 		fmt.Println(nil)
 		return
 	}
 
+	fmt.Println("Populating", database)
+	stmt, _ := db.Prepare("INSERT INTO data(Username, Password, Admin) values(?,?,?)")
+	for i := 20; i < 50; i++ {
+		if i%2 == 0 {
+			_, _ = stmt.Exec("name"+strconv.Itoa(i), "pass"+strconv.Itoa(2*i), true)
+		} else {
+			_, _ = stmt.Exec("name"+strconv.Itoa(i), "pass"+strconv.Itoa(2*i), false)
+		}
+	}
 }

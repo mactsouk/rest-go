@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/mactsouk/handlers"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -19,11 +20,24 @@ func main() {
 	fmt.Println("Reading from SQLite3:", database)
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	rows, err := db.Query("SELECT * FROM data")
+	if err != nil {
 		fmt.Println(nil)
 		return
 	}
 
-	temp := handlers.User{}
-	fmt.Println(temp)
+	var c1 string
+	var c2 string
+	var c3 bool
+
+	for rows.Next() {
+		err = rows.Scan(&c1, &c2, &c3)
+		temp := handlers.Input{c1, c2, c3}
+		fmt.Printf("%v\n", temp)
+	}
 
 }
