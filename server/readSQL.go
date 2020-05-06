@@ -49,8 +49,7 @@ func main() {
 		return
 	}
 
-	var c1 string
-	var c2 string
+	var c1, c2 string
 	var c3 bool
 
 	for rows.Next() {
