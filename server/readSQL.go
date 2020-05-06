@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+
+	"github.com/mactsouk/handlers"
 )
 
 func main() {
@@ -20,4 +22,8 @@ func main() {
 		fmt.Println(nil)
 		return
 	}
+
+	temp := handlers.User{}
+	fmt.Println(temp)
+
 }
