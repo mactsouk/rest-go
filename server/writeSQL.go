@@ -36,7 +36,7 @@ func main() {
 
 	fmt.Println("Populating", database)
 	stmt, _ := db.Prepare("INSERT INTO data(Username, Password, Admin) values(?,?,?)")
-	for i := 20; i < 50; i++ {
+	for i := 20; i < 25; i++ {
 		if i%2 == 0 {
 			_, _ = stmt.Exec("name"+strconv.Itoa(i), "pass"+strconv.Itoa(2*i), true)
 		} else {

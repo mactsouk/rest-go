@@ -1,13 +1,32 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/mactsouk/handlers"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+const (
+	empty = ""
+	tab   = "\t"
+)
+
+func PrettyJson(data interface{}) (string, error) {
+	buffer := new(bytes.Buffer)
+	encoder := json.NewEncoder(buffer)
+	encoder.SetIndent(empty, tab)
+
+	err := encoder.Encode(data)
+	if err != nil {
+		return empty, err
+	}
+	return buffer.String(), nil
+}
 
 func main() {
 	arguments := os.Args
@@ -37,7 +56,7 @@ func main() {
 	for rows.Next() {
 		err = rows.Scan(&c1, &c2, &c3)
 		temp := handlers.Input{c1, c2, c3}
-		fmt.Printf("%v\n", temp)
+		t, _ := PrettyJson(temp)
+		fmt.Println(t)
 	}
-
 }
