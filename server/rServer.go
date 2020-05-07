@@ -42,12 +42,17 @@ func main() {
 
 	// Register PUT
 	// Update User
+	putMux := mux.Methods(http.MethodPut).Subrouter()
+	putMux.HandleFunc("/update", handlers.UpdateHandler)
 
 	// Register POST
 	// Change + Add User
+	postMux := mux.Methods(http.MethodPost).Subrouter()
+	postMux.HandleFunc("/add", handlers.AddHandler)
 
 	// Register DELETE
 	// Delete User
+	deleteMux := mux.Methods(http.MethodDelete).Subrouter()
 
 	err := s.ListenAndServe()
 	if err != nil {
