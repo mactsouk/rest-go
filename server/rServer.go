@@ -37,12 +37,17 @@ func main() {
 	// Register GET
 	getMux := mux.Methods(http.MethodGet).Subrouter()
 	getMux.HandleFunc("/time", handlers.TimeHandler)
+	getMux.HandleFunc("/getall", handlers.GetAllHandler)
+	getMux.HandleFunc("/get/{id:[0-9]+}", handlers.GetHandler)
 
 	// Register PUT
+	// Update User
 
 	// Register POST
+	// Change + Add User
 
 	// Register DELETE
+	// Delete User
 
 	err := s.ListenAndServe()
 	if err != nil {
