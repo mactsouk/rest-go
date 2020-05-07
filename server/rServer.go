@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -13,12 +13,17 @@ import (
 // PORT is where the web server listens to
 var PORT = ":1234"
 
+type notAllowedHandler struct{}
+
+func (h notAllowedHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	handlers.MethodNotAllowedHandler(rw, r)
+}
+
 func main() {
 	arguments := os.Args
 	if len(arguments) != 1 {
 		PORT = ":" + arguments[1]
 	}
-	fmt.Println("Listening to", PORT)
 
 	// Create a new ServeMux using Gorilla
 	mux := mux.NewRouter()
@@ -32,7 +37,10 @@ func main() {
 		IdleTimeout:  10 * time.Second,
 	}
 
-	mux.HandleFunc("/", handlers.DefaultHandler)
+	mux.NotFoundHandler = http.HandlerFunc(handlers.DefaultHandler)
+
+	notAllowed := notAllowedHandler{}
+	mux.MethodNotAllowedHandler = notAllowed
 
 	// Register GET
 	getMux := mux.Methods(http.MethodGet).Subrouter()
@@ -49,14 +57,20 @@ func main() {
 	// Change + Add User
 	postMux := mux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/add", handlers.AddHandler)
+	postMux.HandleFunc("/login", handlers.LoginHandler)
+	postMux.HandleFunc("/logout", handlers.LogoutHandler)
 
 	// Register DELETE
 	// Delete User
 	deleteMux := mux.Methods(http.MethodDelete).Subrouter()
+	deleteMux.HandleFunc("/delete", handlers.DeleteHandler)
+	deleteMux.HandleFunc("/", handlers.DefaultHandler)
+
+	log.Println("Listening to", PORT)
 
 	err := s.ListenAndServe()
 	if err != nil {
-		fmt.Printf("Error starting server: %s\n", err)
+		log.Printf("Error starting server: %s\n", err)
 		return
 	}
 }
