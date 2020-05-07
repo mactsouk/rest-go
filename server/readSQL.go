@@ -16,7 +16,8 @@ const (
 	tab   = "\t"
 )
 
-func PrettyJson(data interface{}) (string, error) {
+// PrettyJSON beautifies the printing of JSON records
+func PrettyJSON(data interface{}) (string, error) {
 	buffer := new(bytes.Buffer)
 	encoder := json.NewEncoder(buffer)
 	encoder.SetIndent(empty, tab)
@@ -55,7 +56,7 @@ func main() {
 	for rows.Next() {
 		err = rows.Scan(&c1, &c2, &c3)
 		temp := handlers.Input{c1, c2, c3}
-		t, _ := PrettyJson(temp)
+		t, _ := PrettyJSON(temp)
 		fmt.Println(t)
 	}
 }
