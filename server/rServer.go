@@ -46,7 +46,8 @@ func main() {
 	getMux := mux.Methods(http.MethodGet).Subrouter()
 	getMux.HandleFunc("/time", handlers.TimeHandler)
 	getMux.HandleFunc("/getall", handlers.GetAllHandler)
-	getMux.HandleFunc("/get/{id:[0-9]+}", handlers.GetHandler)
+	getMux.HandleFunc("/getid", handlers.GetIDHandler)
+	getMux.HandleFunc("/username/{id:[0-9]+}", handlers.GetUserDataHandler)
 
 	// Register PUT
 	// Update User
@@ -63,7 +64,7 @@ func main() {
 	// Register DELETE
 	// Delete User
 	deleteMux := mux.Methods(http.MethodDelete).Subrouter()
-	deleteMux.HandleFunc("/delete", handlers.DeleteHandler)
+	deleteMux.HandleFunc("/username/{id:[0-9]+}", handlers.DeleteHandler)
 	deleteMux.HandleFunc("/", handlers.DefaultHandler)
 
 	log.Println("Listening to", PORT)
