@@ -22,14 +22,14 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 func idHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("ID Serving:", r.URL.Path, "from", r.Host)
 	reg := regexp.MustCompile(`/([0-9]+)`)
-	g := reg.FindAllStringSubmatch(r.URL.Path, -1)
-	if len(g) != 1 {
+	match := reg.FindAllStringSubmatch(r.URL.Path, -1)
+	if len(match) != 1 {
 		log.Println("Invalid URI - More than one ID!")
 		http.Error(w, "Invalid URI", http.StatusBadRequest)
 		return
 	}
 
-	idText := g[0][1]
+	idText := match[0][1]
 	id, err := strconv.Atoi(idText)
 	if err != nil {
 		log.Println("Cannot convert to integer", idText)
@@ -67,5 +67,4 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-
 }
