@@ -47,6 +47,7 @@ func main() {
 	getMux.HandleFunc("/time", handlers.TimeHandler)
 	getMux.HandleFunc("/getall", handlers.GetAllHandler)
 	getMux.HandleFunc("/getid", handlers.GetIDHandler)
+	getMux.HandleFunc("/logged", handlers.LoggedUsersHandler)
 	getMux.HandleFunc("/username/{id:[0-9]+}", handlers.GetUserDataHandler)
 
 	// Register PUT
@@ -55,7 +56,7 @@ func main() {
 	putMux.HandleFunc("/update", handlers.UpdateHandler)
 
 	// Register POST
-	// Change + Add User
+	// Add User + Login + Logout
 	postMux := mux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/add", handlers.AddHandler)
 	postMux.HandleFunc("/login", handlers.LoginHandler)
