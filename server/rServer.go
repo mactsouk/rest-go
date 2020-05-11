@@ -21,7 +21,7 @@ func (h notAllowedHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 func main() {
 	arguments := os.Args
-	if len(arguments) != 1 {
+	if len(arguments) >= 2 {
 		PORT = ":" + arguments[1]
 	}
 
