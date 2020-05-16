@@ -26,6 +26,12 @@ func main() {
 		PORT = ":" + arguments[1]
 	}
 
+	// Create SQLite3 database + admin user
+	if !handlers.CreateDatabase() {
+		log.Println("Cannot create database!")
+		return
+	}
+
 	// Create a new ServeMux using Gorilla
 	mux := mux.NewRouter()
 
