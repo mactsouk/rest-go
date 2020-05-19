@@ -26,6 +26,7 @@ func main() {
 		PORT = ":" + arguments[1]
 	}
 
+	// Each time you restart the server, SQLite3 is initialized
 	// Create SQLite3 database + admin user
 	if !handlers.CreateDatabase() {
 		log.Println("Cannot create database!")
@@ -73,7 +74,6 @@ func main() {
 	// Delete User
 	deleteMux := mux.Methods(http.MethodDelete).Subrouter()
 	deleteMux.HandleFunc("/username/{id:[0-9]+}", handlers.DeleteHandler)
-	deleteMux.HandleFunc("/", handlers.DefaultHandler)
 
 	go func() {
 		log.Println("Listening to", PORT)

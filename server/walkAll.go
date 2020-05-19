@@ -12,13 +12,44 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func (h notAllowedHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	handler(rw, r)
+}
+
+type notAllowedHandler struct{}
+
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler)
-	r.HandleFunc("/products", handler).Methods("POST")
-	r.HandleFunc("/articles", handler).Methods("GET")
-	r.HandleFunc("/articles/{id}", handler).Methods("GET", "PUT")
-	r.HandleFunc("/authors", handler).Queries("surname", "{surname}")
+
+	r.NotFoundHandler = http.HandlerFunc(handler)
+	notAllowed := notAllowedHandler{}
+	r.MethodNotAllowedHandler = notAllowed
+
+	// Register GET
+	getMux := r.Methods(http.MethodGet).Subrouter()
+	getMux.HandleFunc("/time", handler)
+	getMux.HandleFunc("/getall", handler)
+	getMux.HandleFunc("/getid", handler)
+	getMux.HandleFunc("/logged", handler)
+	getMux.HandleFunc("/username/{id:[0-9]+}", handler)
+
+	// Register PUT
+	// Update User
+	putMux := r.Methods(http.MethodPut).Subrouter()
+	putMux.HandleFunc("/update", handler)
+
+	// Register POST
+	// Add User + Login + Logout
+	postMux := r.Methods(http.MethodPost).Subrouter()
+	postMux.HandleFunc("/add", handler)
+	postMux.HandleFunc("/login", handler)
+	postMux.HandleFunc("/logout", handler)
+
+	// Register DELETE
+	// Delete User
+	deleteMux := r.Methods(http.MethodDelete).Subrouter()
+	deleteMux.HandleFunc("/username/{id:[0-9]+}", handler)
+
 	err := r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		pathTemplate, err := route.GetPathTemplate()
 		if err == nil {
