@@ -30,7 +30,7 @@ type U3 struct {
 	ID        int    `json:"id" validate:"required,gte=1"`
 	Username  string `json:"user" validate:"required,email"`
 	Password  string `json:"password" validate:"required"`
-	LastLogin int64  `json:"lastlogin" validate:"gte=1590550000,,lte=1800000000"`
+	LastLogin int64  `json:"lastlogin" validate:"gte=1590550000,lte=1800000000"`
 	Admin     int    `json:"admin" validate:"required"`
 	Active    int    `json:"active"`
 }
