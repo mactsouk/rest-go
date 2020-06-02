@@ -63,21 +63,6 @@ func saveToFile(path string, contents io.Reader) error {
 	return nil
 }
 
-func sendFile(rw http.ResponseWriter, r *http.Request) {
-	filename, ok := mux.Vars(r)["filename"]
-	if !ok {
-		log.Println("filename value not set!")
-		rw.WriteHeader(http.StatusNotFound)
-		return
-	}
-	log.Println(filename)
-	readFromFile()
-}
-
-func readFromFile() {
-
-}
-
 func createImageDirectory(d string) error {
 	_, err := os.Stat(IMAGESPATH)
 	if os.IsNotExist(err) {
@@ -114,7 +99,9 @@ func main() {
 	putMux.HandleFunc("/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}", uploadFile)
 
 	getMux := mux.Methods(http.MethodGet).Subrouter()
-	getMux.HandleFunc("/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}", sendFile)
+	getMux.Handle(
+		"/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}",
+		http.StripPrefix("/files/", http.FileServer(http.Dir(IMAGESPATH))))
 
 	s := http.Server{
 		Addr:         PORT,
