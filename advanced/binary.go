@@ -19,9 +19,7 @@ func sendFile(rw http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Create a new ServeMux using Gorilla
 	mux := mux.NewRouter()
-
 	s := http.Server{
 		Addr:         PORT,
 		Handler:      mux,
@@ -31,13 +29,11 @@ func main() {
 		IdleTimeout:  10 * time.Second,
 	}
 
-	// Register PUT
-	// Update User
 	putMux := mux.Methods(http.MethodPut).Subrouter()
-	putMux.HandleFunc("/upload/{id:[0-9]+}", uploadFile)
+	putMux.HandleFunc("/files/{id:[0-9]+}", uploadFile)
 
 	getMux := mux.Methods(http.MethodGet).Subrouter()
-	getMux.HandleFunc("/upload/{id:[0-9]+}", sendFile)
+	getMux.HandleFunc("/files/{id:[0-9]+}", sendFile)
 
 	log.Println("Listening to", PORT)
 	err := s.ListenAndServe()
