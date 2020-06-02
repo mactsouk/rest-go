@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/mactsouk/handlers"
 )
 
 var SQLFILE string = ""
@@ -23,6 +24,12 @@ func main() {
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout:  10 * time.Second,
 	}
+
+	putMux := mux.Methods(http.MethodPut).Subrouter()
+	putMux.HandleFunc("/v2/files/{id:[0-9]+}", handlers.UploadFile)
+
+	getMux := mux.Methods(http.MethodGet).Subrouter()
+	getMux.HandleFunc("/v2/files/{id:[0-9]+}", handlers.SendFile)
 
 	log.Println("Listening to", PORT)
 	err := s.ListenAndServe()
