@@ -101,8 +101,7 @@ func main() {
 	getMux := mux.Methods(http.MethodGet).Subrouter()
 	getMux.Handle(
 		"/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}",
-		http.StripPrefix("/files/", http.FileServer(http.Dir(IMAGESPATH)))
-	)
+		http.StripPrefix("/files/", http.FileServer(http.Dir(IMAGESPATH))))
 
 	s := http.Server{
 		Addr:         PORT,
