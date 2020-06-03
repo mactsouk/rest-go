@@ -12,6 +12,7 @@ import (
 
 var SQLFILE string = ""
 var PORT string = ":1234"
+var IMAGESPATH = "/tmp/files"
 
 type notAllowedHandler struct{}
 
@@ -21,16 +22,24 @@ func (h notAllowedHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 func main() {
 	arguments := os.Args
-	if len(arguments) == 2 || len(arguments) == 3 {
-		log.Println("Not enough arguments: DBNAME ")
+	if len(arguments) < 2 {
+		log.Println("Not enough arguments: SQLFILE IMAGESPATH [PORT]")
 		return
 	}
 
-	if len(arguments) == 5 {
-		PORT = ":" + arguments[1]
+	if len(arguments) == 2 {
+		SQLFILE = arguments[1]
+	} else if len(arguments) == 3 {
+		SQLFILE = arguments[1]
+		IMAGESPATH = arguments[2]
+	} else if len(arguments) == 4 {
+		SQLFILE = arguments[1]
+		IMAGESPATH = arguments[2]
+		PORT = ":" + arguments[3]
 	}
 
-	err := handlers.CreateImageDirectory(IMAGESPATH)
+	handlers.IMAGESPATH = IMAGESPATH
+	err := handlers.CreateImageDirectory()
 	if err != nil {
 		log.Println(err)
 		return
@@ -58,10 +67,21 @@ func main() {
 		"/v2/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}",
 		http.StripPrefix("/v2/files/", http.FileServer(http.Dir(IMAGESPATH))))
 
-	mux.Use(handers.MiddleWare)
+	getMux.HandleFunc("/v1/time", handlers.TimeHandler)
+	getMux.HandleFunc("/v2/time", handlers.TimeHandler)
+
+	postMux := mux.Methods(http.MethodPost).Subrouter()
+	postMux.HandleFunc("/v1/add", handlers.AddHandler)
+	postMux.HandleFunc("/v1/login", handlers.LoginHandler)
+	postMux.HandleFunc("/v1/logout", handlers.LogoutHandler)
+	postMux.HandleFunc("/v2/add", handlers.AddHandler)
+	postMux.HandleFunc("/v2/login", handlers.LoginHandler)
+	postMux.HandleFunc("/v2/logout", handlers.LogoutHandler)
+
+	mux.Use(handlers.MiddleWare)
 
 	log.Println("Listening to", PORT)
-	err := s.ListenAndServe()
+	err = s.ListenAndServe()
 	if err != nil {
 		log.Printf("Error starting server: %s\n", err)
 		return
