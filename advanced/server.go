@@ -68,7 +68,9 @@ func main() {
 		http.StripPrefix("/v2/files/", http.FileServer(http.Dir(IMAGESPATH))))
 
 	getMux.HandleFunc("/v1/time", handlers.TimeHandler)
+	getMux.HandleFunc("/v1/getall", handlers.GetAllHandlerUpdated)
 	getMux.HandleFunc("/v2/time", handlers.TimeHandler)
+	getMux.HandleFunc("/v2/getall", handlers.GetAllHandlerV2)
 
 	postMux := mux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/v1/add", handlers.AddHandler)
