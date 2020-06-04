@@ -74,9 +74,9 @@ func main() {
 	postMux.HandleFunc("/v1/add", handlers.AddHandler)
 	postMux.HandleFunc("/v1/login", handlers.LoginHandler)
 	postMux.HandleFunc("/v1/logout", handlers.LogoutHandler)
-	postMux.HandleFunc("/v2/add", handlers.AddHandler)
-	postMux.HandleFunc("/v2/login", handlers.LoginHandler)
-	postMux.HandleFunc("/v2/logout", handlers.LogoutHandler)
+	postMux.HandleFunc("/v2/add", handlers.AddHandlerV2)
+	postMux.HandleFunc("/v2/login", handlers.LoginHandlerV2)
+	postMux.HandleFunc("/v2/logout", handlers.LogoutHandlerV2)
 
 	mux.Use(handlers.MiddleWare)
 
