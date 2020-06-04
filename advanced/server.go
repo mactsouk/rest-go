@@ -38,8 +38,24 @@ func main() {
 		PORT = ":" + arguments[3]
 	}
 
+	handlers.SQLFILE = SQLFILE
+	_, err := os.Stat(SQLFILE)
+	if os.IsNotExist(err) {
+		if !handlers.CreateDatabase() {
+			log.Println("Cannot create database:", SQLFILE)
+			return
+		}
+	}
+
+	fileInfo, err := os.Stat(SQLFILE)
+	mode := fileInfo.Mode()
+	if !mode.IsRegular() {
+		log.Println(SQLFILE + " is not a file!")
+		return
+	}
+
 	handlers.IMAGESPATH = IMAGESPATH
-	err := handlers.CreateImageDirectory()
+	err = handlers.CreateImageDirectory(IMAGESPATH)
 	if err != nil {
 		log.Println(err)
 		return
