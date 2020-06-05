@@ -26,6 +26,12 @@ func createDatabase() bool {
 		if !handlers.CreateDatabase() {
 			log.Println("Cannot create database:", SQLFILE)
 			return false
+		} else {
+			// Update admin user password with a random string
+			randomPass := handlers.RandomPassword(5)
+			log.Println("Admin password is", randomPass, "PLEASE CHANGE IT!")
+			temp := handlers.User{1, "admin", randomPass, 0, 1, 0}
+			handlers.UpdateUser(temp)
 		}
 	}
 
@@ -57,6 +63,7 @@ func main() {
 	}
 
 	handlers.SQLFILE = SQLFILE
+
 	if !createDatabase() {
 		log.Println("Cannot create database!")
 		return
