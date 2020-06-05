@@ -10,7 +10,7 @@ import (
 	"github.com/mactsouk/handlers"
 )
 
-var SQLFILE string = ""
+var SQLFILE string = "/tmp/users.db"
 var PORT string = ":1234"
 var IMAGESPATH = "/tmp/files"
 
@@ -46,9 +46,9 @@ func createDatabase() bool {
 
 func main() {
 	arguments := os.Args
-	if len(arguments) < 2 {
-		log.Println("Not enough arguments: SQLFILE IMAGESPATH [PORT]")
-		return
+	if len(arguments) == 1 {
+		log.Println("Usage: [SQLFILE] [IMAGESPATH] [PORT]")
+		log.Println("Using default values!")
 	}
 
 	if len(arguments) == 2 {
