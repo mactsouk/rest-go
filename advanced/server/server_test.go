@@ -129,7 +129,7 @@ func TestGetallV1(t *testing.T) {
 		return
 	}
 
-	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":0,"admin":1,"active":0}]`
+	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":1591373406,"admin":1,"active":0}]`
 	if rr.Body.String() != expected+"\n" {
 		t.Errorf("handler returned unexpected body: got %v but wanted %v", rr.Body.String(), expected)
 	}
@@ -154,9 +154,89 @@ func TestGetallV2(t *testing.T) {
 		return
 	}
 
-	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":0,"admin":1,"active":0}]`
+	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":1591373406,"admin":1,"active":0}]`
 	if rr.Body.String() != expected+"\n" {
 		t.Errorf("handler returned unexpected body: got %v but wanted %v",
 			rr.Body.String(), expected)
+	}
+}
+
+func TestLoginV1(t *testing.T) {
+	UserPass := []byte(`{"user": "admin", "password": "1"}`)
+	req, err := http.NewRequest("POST", "/v1/login", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.LoginHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
+	}
+}
+
+func TestLoginV2(t *testing.T) {
+	UserPass := []byte(`{"username": "admin", "password": "1", "U": {}}`)
+	req, err := http.NewRequest("GET", "/v2/login", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.LoginHandlerV2)
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
+	}
+}
+
+func TestLogoutV1(t *testing.T) {
+	UserPass := []byte(`{"user": "admin", "password": "1"}`)
+	req, err := http.NewRequest("POST", "/v1/logout", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.LogoutHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
+	}
+}
+
+func TestLogoutV2(t *testing.T) {
+	UserPass := []byte(`{"username": "admin", "password": "1", "U": {}}`)
+	req, err := http.NewRequest("GET", "/v2/logout", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.LogoutHandlerV2)
+	handler.ServeHTTP(rr, req)
+
+	// Check the status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
 	}
 }
