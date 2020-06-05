@@ -21,7 +21,6 @@ func TestTimeHanlderV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.TimeHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -37,7 +36,6 @@ func TestTimeHanlderV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.TimeHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -54,7 +52,6 @@ func TestNotFoundV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.DefaultHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -71,7 +68,6 @@ func TestNotFoundV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.DefaultHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -88,7 +84,6 @@ func TestMethodNotAllowedV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.MethodNotAllowedHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -105,7 +100,6 @@ func TestMethodNotAllowedV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.MethodNotAllowedHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusNotFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -124,7 +118,6 @@ func TestGetallV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.GetAllHandlerUpdated)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -154,7 +147,6 @@ func TestGetallV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.GetAllHandlerV2)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -184,7 +176,6 @@ func TestLoginV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.LoginHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -204,7 +195,6 @@ func TestLoginV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.LoginHandlerV2)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -224,7 +214,7 @@ func TestLogoutV1(t *testing.T) {
 	handler := http.HandlerFunc(handlers.LogoutHandler)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
+	// Check the HTTP status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
@@ -244,7 +234,6 @@ func TestLogoutV2(t *testing.T) {
 	handler := http.HandlerFunc(handlers.LogoutHandlerV2)
 	handler.ServeHTTP(rr, req)
 
-	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
