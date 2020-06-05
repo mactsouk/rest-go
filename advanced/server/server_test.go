@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/mactsouk/handlers"
@@ -129,9 +131,14 @@ func TestGetallV1(t *testing.T) {
 		return
 	}
 
-	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":1591373406,"admin":1,"active":0}]`
-	if rr.Body.String() != expected+"\n" {
-		t.Errorf("handler returned unexpected body: got %v but wanted %v", rr.Body.String(), expected)
+	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":0,"admin":1,"active":0}]`
+	serverResponse := rr.Body.String()
+	result := strings.Split(serverResponse, "lastlogin")
+	serverResponse = result[0] + `lastlogin":0,"admin":1,"active":0}]`
+	fmt.Println("****", serverResponse)
+	if serverResponse != expected {
+		t.Errorf("handler returned unexpected body: got %v but wanted %v",
+			rr.Body.String(), expected)
 	}
 }
 
@@ -154,8 +161,12 @@ func TestGetallV2(t *testing.T) {
 		return
 	}
 
-	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":1591373406,"admin":1,"active":0}]`
-	if rr.Body.String() != expected+"\n" {
+	expected := `[{"id":1,"user":"admin","password":"1","lastlogin":0,"admin":1,"active":0}]`
+	serverResponse := rr.Body.String()
+	result := strings.Split(serverResponse, "lastlogin")
+	serverResponse = result[0] + `lastlogin":0,"admin":1,"active":0}]`
+
+	if serverResponse != expected {
 		t.Errorf("handler returned unexpected body: got %v but wanted %v",
 			rr.Body.String(), expected)
 	}
