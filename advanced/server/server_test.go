@@ -240,3 +240,42 @@ func TestLogoutV2(t *testing.T) {
 		return
 	}
 }
+
+func TestAddV1(t *testing.T) {
+	UserPass := []byte(`[{"user": "admin", "password": "1"}, {"user": "m", "password": "myPass"}]`)
+	req, err := http.NewRequest("POST", "/v1/add", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.AddHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check the HTTP status code is what we expect.
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
+	}
+}
+
+func TestAddV2(t *testing.T) {
+	UserPass := []byte(`{"username": "admin", "password": "1", "U": {"id":1,"user":"mtsouk","password":"newPass","lastlogin":0,"admin":1,"active":0}}`)
+	req, err := http.NewRequest("GET", "/v2/add", bytes.NewBuffer(UserPass))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlers.AddHandlerV2)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+		return
+	}
+}
