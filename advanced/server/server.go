@@ -63,13 +63,13 @@ func main() {
 	}
 
 	handlers.SQLFILE = SQLFILE
+	handlers.IMAGESPATH = IMAGESPATH
 
 	if !createDatabase() {
 		log.Println("Cannot create database!")
 		return
 	}
 
-	handlers.IMAGESPATH = IMAGESPATH
 	err := handlers.CreateImageDirectory(IMAGESPATH)
 	if err != nil {
 		log.Println(err)
@@ -91,7 +91,8 @@ func main() {
 	mux.MethodNotAllowedHandler = notAllowed
 
 	putMux := mux.Methods(http.MethodPut).Subrouter()
-	putMux.HandleFunc("/v2/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}", handlers.UploadFile)
+	putMux.HandleFunc("/v2/files/{filename:[a-zA-Z0-9][a-zA-Z0-9\\.]*[a-zA-Z0-9]}",
+		handlers.UploadFile)
 
 	getMux := mux.Methods(http.MethodGet).Subrouter()
 	getMux.Handle(
