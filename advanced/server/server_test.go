@@ -136,7 +136,7 @@ func TestGetallV1(t *testing.T) {
 }
 
 func TestGetallV2(t *testing.T) {
-	UserPass := []byte(`{"username": "admin", "password": "1", "U": {}}`)
+	UserPass := []byte(`{"username": "admin", "password": "1", "load": {}}`)
 	req, err := http.NewRequest("GET", "/v2/getall", bytes.NewBuffer(UserPass))
 	if err != nil {
 		t.Fatal(err)
@@ -184,7 +184,7 @@ func TestLoginV1(t *testing.T) {
 }
 
 func TestLoginV2(t *testing.T) {
-	UserPass := []byte(`{"username": "admin", "password": "1", "U": {}}`)
+	UserPass := []byte(`{"username": "admin", "password": "1", "load": {}}`)
 	req, err := http.NewRequest("GET", "/v2/login", bytes.NewBuffer(UserPass))
 	if err != nil {
 		t.Fatal(err)
@@ -223,7 +223,7 @@ func TestLogoutV1(t *testing.T) {
 }
 
 func TestLogoutV2(t *testing.T) {
-	UserPass := []byte(`{"username": "admin", "password": "1", "U": {}}`)
+	UserPass := []byte(`{"username": "admin", "password": "1", "load": {}}`)
 	req, err := http.NewRequest("GET", "/v2/logout", bytes.NewBuffer(UserPass))
 	if err != nil {
 		t.Fatal(err)
@@ -262,7 +262,7 @@ func TestAddV1(t *testing.T) {
 }
 
 func TestAddV2(t *testing.T) {
-	UserPass := []byte(`{"username": "admin", "password": "1", "U": {"id":1,"user":"mtsouk","password":"newPass","lastlogin":0,"admin":1,"active":0}}`)
+	UserPass := []byte(`{"username": "admin", "password": "1", "load": {"id":1,"user":"mtsouk","password":"newPass","lastlogin":0,"admin":1,"active":0}}`)
 	req, err := http.NewRequest("GET", "/v2/add", bytes.NewBuffer(UserPass))
 	if err != nil {
 		t.Fatal(err)
