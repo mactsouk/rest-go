@@ -49,9 +49,7 @@ func main() {
 	if len(arguments) == 1 {
 		log.Println("Usage: [SQLFILE] [IMAGESPATH] [PORT]")
 		log.Println("Using default values!")
-	}
-
-	if len(arguments) == 2 {
+	} else if len(arguments) == 2 {
 		SQLFILE = arguments[1]
 	} else if len(arguments) == 3 {
 		SQLFILE = arguments[1]
