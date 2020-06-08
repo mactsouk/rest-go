@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/mactsouk/handlers"
 )
@@ -101,6 +102,12 @@ func main() {
 	getMux.HandleFunc("/v1/getall", handlers.GetAllHandlerUpdated)
 	getMux.HandleFunc("/v2/time", handlers.TimeHandler)
 	getMux.HandleFunc("/v2/getall", handlers.GetAllHandlerV2)
+
+	// Swagger
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+	getMux.Handle("/docs", sh)
+	getMux.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
 	postMux := mux.Methods(http.MethodPost).Subrouter()
 	postMux.HandleFunc("/v1/add", handlers.AddHandler)
